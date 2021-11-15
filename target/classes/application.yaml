@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/MyClub
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: ${dbPassword}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    hibernate:
+#      ddl-auto:
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${idClient}
+            clientSecret: ${idSecret}
+            scope:
+              - email
+              - profile
+              - openid
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+
+
+
+
+cors:
+  ui-url: http://localhost:4200
+
