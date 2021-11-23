@@ -5,6 +5,7 @@ import by.morunov.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,12 +26,17 @@ public class AuthenticationController {
 
     @PostMapping
     public UserDto auth(Principal principal) {
-        LOGGER.debug("User {} logged in", principal.getName());
-        UserDto userDto = userService.getUserByEmail(principal.getName());
-        UserDto userAuth = new UserDto();
-        userAuth.setUsername(userDto.getUsername());
-        userAuth.setEmail(userDto.getEmail());
-        userAuth.setRoles(userDto.getRoles());
-        return userAuth;
+        LOGGER.warn("User {} logged in", principal.getName());
+        UserDto user = new UserDto();
+        user.setUsername(principal.getName());
+        return user;
     }
+
+    @GetMapping
+    public UserDto profile(Principal principal) {
+        return userService.userAuth(principal.getName());
+
+    }
+
+
 }

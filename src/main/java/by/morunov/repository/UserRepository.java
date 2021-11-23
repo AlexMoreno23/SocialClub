@@ -19,7 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     User findByUsername(String username);
     List<User> findAllByTeam(Club team);
-    Optional<User> findByGoogleId(String id);
+    User findByGoogleId(String id);
+
 
     @Modifying
     @Query("UPDATE User a " +

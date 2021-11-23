@@ -1,18 +1,15 @@
 package by.morunov.service.impl;
 
+import by.morunov.domain.dto.TicketDto;
 import by.morunov.domain.dto.UserDto;
-import by.morunov.domain.entity.Club;
-import by.morunov.domain.entity.Role;
-import by.morunov.domain.entity.Ticket;
-import by.morunov.domain.entity.User;
+import by.morunov.domain.entity.*;
 import by.morunov.exception.EmailException;
 import by.morunov.exception.TicketStoreException;
 import by.morunov.exception.UserNotFoundException;
 import by.morunov.exception.UserRegistrationException;
-import by.morunov.domain.entity.ConfirmToken;
 import by.morunov.repository.UserRepository;
 import by.morunov.service.converter.UserConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,24 +29,18 @@ import java.util.UUID;
  */
 @Transactional
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
+    private final UserRepository userRepository;
     @Lazy
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserConverter userConverter;
-
-    @Autowired
-    private ConfirmTokenService confirmTokenService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserConverter userConverter;
+    private final ConfirmTokenService confirmTokenService;
 
     private final static String USER_NOT_FOUND_EMAIL = "user with email %s not found";
     private final static String USER_NOT_FOUND_ID = "user with id %s not found";
-
 
 
     @Override
@@ -57,10 +48,10 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_EMAIL, email)));
     }
 
-    public String signUpUser(User user){
+    public String signUpUser(User user) {
         boolean userExist = userRepository.findByEmail(user.getEmail()).
                 isPresent();
-        if(userExist){
+        if (userExist) {
             throw new EmailException("email already taken");
         }
         String encodePassword = passwordEncoder.
@@ -88,7 +79,6 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
 
-
     public void addUserFromGoogle(User user) throws UserRegistrationException {
         Optional<User> userFromDb = userRepository.findByEmail(user.getEmail());
         if (userFromDb.isEmpty()) {
@@ -108,58 +98,97 @@ public class UserServiceImpl implements UserDetailsService {
 
     }
 
-    public List<UserDto> getByTeam(Club team){
+
+    public List<UserDto> getByTeam(Club team) {
         return userConverter.toDto(userRepository.findAllByTeam(team));
     }
 
-    public Optional<User> getUserByGoogleId(String googleId) {
-        return userRepository.findByGoogleId(googleId);
+    public UserDto getUserByGoogleId(String googleId) {
+        return userConverter.toDto(userRepository.findByGoogleId(googleId));
+    }
+
+    public UserDto userAuth(String auth) {
+        UserDto userAuth = new UserDto();
+        if (userRepository.findByGoogleId(auth) != null) {
+            UserDto userDto = getUserByGoogleId(auth);
+            userAuth.setId(userDto.getId());
+            userAuth.setUsername(userDto.getUsername());
+            userAuth.setEmail(userDto.getEmail());
+            userAuth.setFirstName(userDto.getFirstName());
+            userAuth.setLastName(userDto.getLastName());
+            userAuth.setBalance(userDto.getBalance());
+            userAuth.setFriends(userDto.getFriends());
+            userAuth.setTeam(userDto.getTeam());
+            userAuth.setRoles(userDto.getRoles());
+            return userAuth;
+        }
+        Optional<User> user = userRepository.findByEmail(auth);
+        userAuth.setId(user.get().getId());
+        userAuth.setUsername(user.get().getUsername());
+        userAuth.setFirstName(user.get().getFirstName());
+        userAuth.setLastName(user.get().getLastName());
+        userAuth.setBalance(user.get().getBalance());
+        userAuth.setEmail(user.get().getEmail());
+        userAuth.setFriends(userConverter.toDto(user.get().getFriends()));
+        userAuth.setTeam(user.get().getTeam());
+        userAuth.setRoles(user.get().getRoles());
+        return userAuth;
     }
 
     public List<UserDto> getAll() {
         return userConverter.toDto(userRepository.findAll());
     }
 
-    public UserDto getByUsername(String username){
-        return userConverter.toDto(userRepository.findByUsername(username));
-    }
-
     public UserDto getUserById(Long id) {
         return userConverter.toDto(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_ID, id))));
     }
-    public UserDto converterToDto(User user){
+
+    public UserDto converterToDto(User user) {
         return userConverter.toDto(user);
     }
 
-    public User converterToEntity(UserDto userDto){
+    public User converterToEntity(UserDto userDto) {
         return userConverter.toEntity(userDto);
     }
 
 
-
-    public UserDto updateUser(User user){
-        return userConverter.toDto(userRepository.save(user));
+    public void saveUser(UserDto userDto){
+        userConverter.toDto(userRepository.save(userConverter.toEntity(userDto)));
     }
 
-
-
-    public void deleteUserById(Long id){
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
-    public UserDto buyTicket(User user, Ticket ticket){
-        int balance = user.getBalance() - ticket.getPrice();
-        if (balance < 0){
+    public void addFriends(Long userId, Long friendId){
+        User user = userRepository.getById(userId);
+        User friend = userRepository.getById(friendId);
+        List<User> friendsList = user.getFriends();
+        friendsList.add(friend);
+        user.setFriends(friendsList);
+        userRepository.save(user);
+    }
+
+    public void buyTicket(UserDto user, TicketDto ticket) {
+        Long balance = user.getBalance() - ticket.getPrice();
+        if (balance < 0) {
             throw new TicketStoreException("not enough funds! Top up your balance");
         }
         user.setBalance(balance);
-        List<Ticket> tickets = user.getTickets();
+        List<TicketDto> tickets = user.getTickets();
         tickets.add(ticket);
         user.setTickets(tickets);
-        return userConverter.toDto(userRepository.save(user));
+         userRepository.save(userConverter.toEntity(user));
     }
 
-    public UserDto getUserByEmail(String email){
+    public void TopBalance(Long id, Long addBalance){
+        UserDto userDto = userConverter.toDto(userRepository.getById(id));
+        Long result = userDto.getBalance() + addBalance;
+        userDto.setBalance(result);
+        userRepository.save(converterToEntity(userDto));
+    }
+
+    public UserDto getUserByEmail(String email) {
         return userConverter.toDto(userRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException(String.format(USER_NOT_FOUND_EMAIL, email))));
     }

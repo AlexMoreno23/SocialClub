@@ -18,7 +18,6 @@ import java.util.List;
  */
 @Transactional
 @Service
-
 public class NewsServiceImpl implements NewsService {
 
     @Autowired

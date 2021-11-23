@@ -3,21 +3,19 @@ package by.morunov.domain.dto;
 import by.morunov.domain.entity.Club;
 import by.morunov.domain.entity.Role;
 import by.morunov.domain.entity.Ticket;
-import by.morunov.domain.entity.User;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.List;
 import java.util.Set;
 
 /**
  * @author Alex Morunov
  */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -32,9 +30,14 @@ public class UserDto {
     private String lastName;
     private String email;
     private String password;
-    private int balance;
-    public List<Ticket> tickets;
+    private Long balance;
+    public List<TicketDto> tickets;
     private Club team;
     private Set<Role> roles;
-    private List<User> friends;
+    private List<UserDto> friends;
+
+    @JsonCreator
+    public UserDto(Long balance) {
+        this.balance = balance;
+    }
 }

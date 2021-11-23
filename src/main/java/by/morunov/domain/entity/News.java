@@ -1,13 +1,9 @@
 package by.morunov.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "news")
 public class News {
 
@@ -32,9 +29,11 @@ public class News {
     @Column(name = "text")
     private String text;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
+
 
     @Column(name = "publicationDate")
     private String publicationDate;
@@ -43,6 +42,7 @@ public class News {
     public void setDate() {
         publicationDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
     @PreUpdate
     public void setDateOnUpdate() {
         publicationDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

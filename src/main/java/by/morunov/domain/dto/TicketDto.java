@@ -16,12 +16,12 @@ import lombok.Setter;
 public class TicketDto {
 
     private Long id;
-    private Match match;
+    private MatchDto match;
     private int row;
     private int seat;
     private int price;
 
-    public TicketDto(Match match, int row, int seat, int price) {
+    public TicketDto(MatchDto match, int row, int seat, int price) {
         this.match = match;
         this.row = row;
         this.seat = seat;

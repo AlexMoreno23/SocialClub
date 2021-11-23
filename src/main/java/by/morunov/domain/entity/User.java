@@ -12,11 +12,13 @@ import java.util.Set;
 /**
  * @author Alex Morunov
  */
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -26,7 +28,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
     private Long id;
 
-    @Column(name = "google_id")
+    @Column(name = "google_id", updatable = false)
     private String googleId;
 
     @Column(name = "username")
@@ -38,33 +40,34 @@ public class User implements UserDetails {
     @Column(name = "lastname")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", updatable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", updatable = false)
     private String password;
 
     @Column(name = "balance")
-    private int balance;
+    private Long balance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "club_id")
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "club_id", updatable = false)
     private Club team;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", updatable = false)
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Column(name = "friends")
+    @Column(name = "friends", updatable = false)
     private List<User> friends;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ticket_id")
+    @JoinColumn(name = "ticket_id", updatable = false)
     private List<Ticket> tickets;
 
-    @Column(name = "activation")
+    @Column(name = "activation", updatable = false)
     private boolean enabled;
 
 

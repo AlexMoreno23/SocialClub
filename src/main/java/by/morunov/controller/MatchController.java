@@ -4,6 +4,9 @@ import by.morunov.domain.dto.MatchDto;
 import by.morunov.domain.entity.Club;
 import by.morunov.service.MatchService;
 import by.morunov.service.impl.MatchServiceImpl;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +21,11 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/api/match")
+@AllArgsConstructor
 public class MatchController {
     private final MatchServiceImpl matchService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MatchController.class);
 
-    @Autowired
-    public MatchController(MatchServiceImpl matchService) {
-        this.matchService = matchService;
-    }
 
     @GetMapping
     public ResponseEntity<List<MatchDto>> getAllMatches(){
@@ -38,9 +39,10 @@ public class MatchController {
         return new ResponseEntity<>(allMatchesByTeam, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     @PostMapping
     public ResponseEntity<MatchDto> addMatch(@RequestBody MatchDto matchDto){
+        LOGGER.info("Add match {}", matchDto);
         MatchDto newMatch = matchService.addMatch(matchDto);
         return new ResponseEntity<>(newMatch, HttpStatus.CREATED);
     }

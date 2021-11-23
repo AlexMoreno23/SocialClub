@@ -3,6 +3,7 @@ package by.morunov.service.converter;
 import by.morunov.domain.dto.UserDto;
 import by.morunov.domain.entity.Ticket;
 import by.morunov.domain.entity.User;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,7 +14,11 @@ import java.util.stream.Stream;
  * @author Alex Morunov
  */
 @Component
+@AllArgsConstructor
 public class UserConverter implements Converter<User, UserDto>{
+
+    private final TicketConverter ticketConverter;
+
     @Override
     public User toEntity(UserDto userDto) {
         User user = new User();
@@ -26,9 +31,9 @@ public class UserConverter implements Converter<User, UserDto>{
         user.setPassword(userDto.getPassword());
         user.setBalance(userDto.getBalance());
         user.setBalance(userDto.getBalance());
-        user.setTickets(userDto.getTickets());
+        user.setTickets(ticketConverter.toEntity(userDto.getTickets()));
         user.setRoles(userDto.getRoles());
-        user.setFriends(userDto.getFriends());
+        user.setFriends(toEntity(userDto.getFriends()));
         return user;
     }
 
@@ -49,9 +54,9 @@ public class UserConverter implements Converter<User, UserDto>{
         userDto.setPassword(user.getPassword());
         userDto.setTeam(user.getTeam());
         userDto.setBalance(user.getBalance());
-        userDto.setTickets(user.getTickets());
+        userDto.setTickets(ticketConverter.toDto(user.getTickets()));
         userDto.setRoles(user.getRoles());
-        userDto.setFriends(user.getFriends());
+        userDto.setFriends(toDto(user.getFriends()));
         return userDto;
     }
 

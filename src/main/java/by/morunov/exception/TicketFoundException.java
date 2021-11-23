@@ -7,9 +7,6 @@ package by.morunov.exception;
  */
 public class TicketFoundException extends RuntimeException {
 
-    public TicketFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 
     public TicketFoundException(String message) {
         super(message);

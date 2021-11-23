@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/MyClub
@@ -45,4 +46,3 @@ spring:
 
 cors:
   ui-url: http://localhost:4200
-

@@ -3,7 +3,6 @@ package by.morunov.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * @author Alex Morunov
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "matches")
 public class Match {
 
@@ -21,15 +21,15 @@ public class Match {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "first_club_id", insertable = false, updatable = false)
+    @JoinColumn(name = "first_club_id")
     private Club team1;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "second_club_id", insertable = false, updatable = false)
+    @JoinColumn(name = "second_club_id")
     private Club team2;
 
     @Column(name = "dateOfMatch")
-    private LocalDateTime dateOfMatch;
+    private String dateOfMatch;
 
 
 
