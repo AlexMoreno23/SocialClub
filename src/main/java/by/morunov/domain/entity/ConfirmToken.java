@@ -1,7 +1,5 @@
 package by.morunov.domain.entity;
 
-import by.morunov.domain.entity.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +17,7 @@ import java.time.LocalDateTime;
 public class ConfirmToken {
 
     @Id
-    @SequenceGenerator(name = "confirm_token_sequence", sequenceName = "confirm_token_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "confirm_token_sequence")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
