@@ -19,9 +19,10 @@ public class ConfirmTokenService {
 
     private final ConfirmTokenRepository confirmTokenRepository;
 
-    public void saveConfirmToken(ConfirmToken token){
+    public void saveConfirmToken(ConfirmToken token) {
         confirmTokenRepository.save(token);
     }
+
     public Optional<ConfirmToken> getToken(String token) {
         return confirmTokenRepository.findByToken(token);
     }

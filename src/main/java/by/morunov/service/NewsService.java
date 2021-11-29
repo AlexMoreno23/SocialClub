@@ -14,14 +14,10 @@ public interface NewsService {
 
     List<NewsDto> getAll();
 
-    List<NewsDto> getByAuthor(User user);
+    List<NewsDto> getByAuthorOrTitle(String authorFirstName, String title);
 
     List<NewsDto> getByTitle(String title);
 
     void deleteById(Long id);
-
-
-
-
 
 }

@@ -30,14 +30,12 @@ public class TicketServiceImpl implements TicketService {
     private final static String TICKET_NOT_FOUND_ID = "ticket with id %s not found";
 
 
-
-
     @Override
     public TicketDto addTicket(TicketDto ticketDto) {
         TicketDto addTicket = null;
-        for(int i = 1; i <= 10; i++){
-            for(int j = 1; j <= 30; j++)
-            addTicket = ticketConverter.toDto(ticketRepository.save(ticketConverter.toEntity(new TicketDto(
+        for (int i = 1; i <= 10; i++) {
+            for (int j = 1; j <= 30; j++)
+                addTicket = ticketConverter.toDto(ticketRepository.save(ticketConverter.toEntity(new TicketDto(
                         ticketDto.getMatch(), i, j, ticketDto.getPrice()))));
         }
 

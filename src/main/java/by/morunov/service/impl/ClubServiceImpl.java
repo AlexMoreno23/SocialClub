@@ -37,7 +37,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public ClubDto getByNameTeam(String nameTeam) {
-        return clubConverter.toDto(clubRepository.findByNameTeam(nameTeam)) ;
+        return clubConverter.toDto(clubRepository.findByNameTeam(nameTeam));
     }
 
     @Override

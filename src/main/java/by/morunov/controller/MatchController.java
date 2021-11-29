@@ -28,32 +28,31 @@ public class MatchController {
 
 
     @GetMapping
-    public ResponseEntity<List<MatchDto>> getAllMatches(){
+    public ResponseEntity<List<MatchDto>> getAllMatches() {
         List<MatchDto> allMatches = matchService.getAll();
         return new ResponseEntity<>(allMatches, HttpStatus.OK);
     }
 
     @GetMapping("/{team}")
-    public ResponseEntity<List<MatchDto>> getAllMatchesByTeam(@PathVariable("team")Club team){
+    public ResponseEntity<List<MatchDto>> getAllMatchesByTeam(@PathVariable("team") Club team) {
         List<MatchDto> allMatchesByTeam = matchService.getAllByTeamName(team);
         return new ResponseEntity<>(allMatchesByTeam, HttpStatus.OK);
     }
 
 
     @PostMapping
-    public ResponseEntity<MatchDto> addMatch(@RequestBody MatchDto matchDto){
+    public ResponseEntity<MatchDto> addMatch(@RequestBody MatchDto matchDto) {
         LOGGER.info("Add match {}", matchDto);
         MatchDto newMatch = matchService.addMatch(matchDto);
         return new ResponseEntity<>(newMatch, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MatchDto> matchById(@PathVariable("id") Long id){
+    public ResponseEntity<MatchDto> matchById(@PathVariable("id") Long id) {
         MatchDto oneMatch = matchService.getMatch(id);
         return new ResponseEntity<>(oneMatch, HttpStatus.OK);
 
     }
-
 
 
 }

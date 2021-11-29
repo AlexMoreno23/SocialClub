@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseBody
 public class CustomControllerAdvice {
     private final static Logger logger = LoggerFactory.getLogger(CustomControllerAdvice.class);
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorRsp errorResponse(MethodArgumentNotValidException ex) {

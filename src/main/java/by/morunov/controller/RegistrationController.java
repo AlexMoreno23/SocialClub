@@ -1,6 +1,6 @@
 package by.morunov.controller;
 
-import by.morunov.domain.entity.RegistrationRequest;
+import by.morunov.domain.RegistrationRequest;
 import by.morunov.service.impl.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Alex Morunov
  */
 @RestController
-@RequestMapping("/api/v1/registration")
+@RequestMapping("/api/registration")
 @AllArgsConstructor
 public class RegistrationController {
 
@@ -20,13 +20,13 @@ public class RegistrationController {
 
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request){
+    public String register(@RequestBody RegistrationRequest request) {
         LOGGER.info("Registration request");
         return registrationService.register(request);
     }
 
     @GetMapping("confirm")
-    public String confirm(@RequestParam("token") String token ){
+    public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }
 }

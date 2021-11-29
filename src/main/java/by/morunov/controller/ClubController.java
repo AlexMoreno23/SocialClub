@@ -26,14 +26,14 @@ public class ClubController {
 
 
     @GetMapping
-    public ResponseEntity<List<ClubDto>> getAllClubs(){
+    public ResponseEntity<List<ClubDto>> getAllClubs() {
         List<ClubDto> allClubs = clubService.getAll();
         return new ResponseEntity<>(allClubs, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<ClubDto> addNewClub(@RequestBody ClubDto clubDto){
+    public ResponseEntity<ClubDto> addNewClub(@RequestBody ClubDto clubDto) {
         LOGGER.info("Add new club {}", clubDto.getNameTeam());
         ClubDto newClub = clubService.addClub(clubDto);
         return new ResponseEntity<>(newClub, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class ClubController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ClubDto> deleteClub(@PathVariable("id") Long id){
+    public ResponseEntity<ClubDto> deleteClub(@PathVariable("id") Long id) {
         LOGGER.info("Delete club");
         clubService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);

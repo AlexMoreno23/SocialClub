@@ -20,17 +20,16 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "first_club_id")
     private Club team1;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "second_club_id")
     private Club team2;
 
     @Column(name = "dateOfMatch")
     private String dateOfMatch;
-
 
 
 }

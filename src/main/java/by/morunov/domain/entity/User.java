@@ -50,7 +50,7 @@ public class User implements UserDetails {
     private Long balance;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "club_id", updatable = false)
     private Club team;
 
@@ -59,11 +59,11 @@ public class User implements UserDetails {
     @Column(name = "role", updatable = false)
     private Set<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @Column(name = "friends", updatable = false)
     private List<User> friends;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name = "ticket_id", updatable = false)
     private List<Ticket> tickets;
 
@@ -71,7 +71,7 @@ public class User implements UserDetails {
     private boolean enabled;
 
 
-    public User( String firstName, String lastName, String email, String password, Set<Role> roles) {
+    public User(String firstName, String lastName, String email, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -91,7 +91,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 

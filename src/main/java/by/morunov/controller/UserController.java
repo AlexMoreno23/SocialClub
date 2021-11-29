@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,19 +53,18 @@ public class UserController {
     }
 
 
-
-    @PutMapping("/{userId}/add/{friendsID}")
+    @PutMapping("/{userId}/friend/{friendsID}")
     public void addFriends(@PathVariable Long userId,
-                           @PathVariable Long friendsID){
+                           @PathVariable Long friendsID) {
         userServiceImpl.addFriends(userId, friendsID);
     }
 
 
-    @PutMapping("/{id}/balance")
-    public void topBalance(@PathVariable Long id, @RequestBody UserDto user) {
-        UserDto updateUser = userServiceImpl.getUserById(id);
+    @PutMapping("/replenishment")
+    public void topBalance(@AuthenticationPrincipal User auth, @RequestBody UserDto user) {
+        UserDto updateUser = userServiceImpl.getUserById(auth.getId());
         updateUser.setBalance(user.getBalance() + updateUser.getBalance());
-        LOGGER.info("User with Id {}, top to balance on {}$ ", id, user.getBalance());
+        LOGGER.info("User with Id {}, top to balance on {}$ ", auth.getId(), user.getBalance());
         userServiceImpl.saveUser(updateUser);
     }
 

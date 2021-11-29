@@ -20,7 +20,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "match_id")
     private Match match;
 

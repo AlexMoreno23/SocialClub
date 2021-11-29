@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailSender {
             helper.setFrom("help@myclub.com");
             mailSender.send(mimeMessage);
 
-        } catch (MessagingException e){
+        } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
             throw new EmailException("failed to send email");
         }

@@ -8,8 +8,8 @@ import by.morunov.exception.TicketStoreException;
 import by.morunov.exception.UserNotFoundException;
 import by.morunov.exception.UserRegistrationException;
 import by.morunov.repository.UserRepository;
+import by.morunov.service.UserService;
 import by.morunov.service.converter.UserConverter;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,18 +29,27 @@ import java.util.UUID;
  */
 @Transactional
 @Service
-@AllArgsConstructor
-public class UserServiceImpl implements UserDetailsService {
+
+public class UserServiceImpl implements UserDetailsService, UserService {
 
 
     private final UserRepository userRepository;
-    @Lazy
     private final PasswordEncoder passwordEncoder;
     private final UserConverter userConverter;
     private final ConfirmTokenService confirmTokenService;
 
     private final static String USER_NOT_FOUND_EMAIL = "user with email %s not found";
     private final static String USER_NOT_FOUND_ID = "user with id %s not found";
+
+    public UserServiceImpl(UserRepository userRepository,
+                           @Lazy PasswordEncoder passwordEncoder,
+                           UserConverter userConverter,
+                           ConfirmTokenService confirmTokenService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userConverter = userConverter;
+        this.confirmTokenService = confirmTokenService;
+    }
 
 
     @Override
@@ -89,15 +98,6 @@ public class UserServiceImpl implements UserDetailsService {
 
     }
 
-    public boolean addFriends(User user, User user1) {
-        List<User> users = user.getFriends();
-        users.add(user1);
-        user.setFriends(users);
-        userRepository.save(user);
-        return true;
-
-    }
-
 
     public List<UserDto> getByTeam(Club team) {
         return userConverter.toDto(userRepository.findAllByTeam(team));
@@ -143,9 +143,6 @@ public class UserServiceImpl implements UserDetailsService {
         return userConverter.toDto(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_ID, id))));
     }
 
-    public UserDto converterToDto(User user) {
-        return userConverter.toDto(user);
-    }
 
     public User converterToEntity(UserDto userDto) {
         return userConverter.toEntity(userDto);

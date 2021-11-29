@@ -1,7 +1,7 @@
 package by.morunov.service.impl;
 
 import by.morunov.domain.entity.ConfirmToken;
-import by.morunov.domain.entity.RegistrationRequest;
+import by.morunov.domain.RegistrationRequest;
 import by.morunov.domain.entity.Role;
 import by.morunov.domain.entity.User;
 import by.morunov.exception.EmailException;
@@ -28,7 +28,7 @@ public class RegistrationService {
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
-        if(!isValidEmail){
+        if (!isValidEmail) {
             throw new EmailException("email not valid");
         }
         String token = userService.signUpUser(new User(
@@ -38,7 +38,7 @@ public class RegistrationService {
                 request.getPassword(),
                 Collections.singleton(Role.PERSON)
         ));
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
+        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
         return token;
     }

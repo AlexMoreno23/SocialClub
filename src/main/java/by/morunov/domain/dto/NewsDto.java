@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NewsDto  {
+public class NewsDto {
     private Long id;
     private String title;
     private String text;

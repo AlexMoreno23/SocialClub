@@ -15,13 +15,13 @@ public class ChatController {
 
     @MessageMapping("/chat.send")
     @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage message){
+    public ChatMessage sendMessage(@Payload ChatMessage message) {
         return message;
     }
 
     @MessageMapping("/chat.newUser")
     @SendTo("/topic/public")
-    public ChatMessage newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor){
+    public ChatMessage newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         return message;
     }

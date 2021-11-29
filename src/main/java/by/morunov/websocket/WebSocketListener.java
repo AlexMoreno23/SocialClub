@@ -25,12 +25,12 @@ public class WebSocketListener {
 
 
     @EventListener
-    public void handleWebSocketConnectListener(SessionConnectedEvent event){
+    public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         LOGGER.info("Connected chat");
     }
 
     @EventListener
-    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         final StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         final String username = (String) headerAccessor.getSessionAttributes().get("username");
         final ChatMessage chatMessage = ChatMessage.builder().type(MessageType.DISCONNECT)

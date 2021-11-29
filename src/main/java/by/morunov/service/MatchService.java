@@ -11,10 +11,12 @@ import java.util.List;
 public interface MatchService {
 
     MatchDto addMatch(MatchDto matchDto);
-    MatchDto getMatch(Long id);
-    List<MatchDto> getAll();
-    List<MatchDto> getAllByTeamName(Club team);
 
+    MatchDto getMatch(Long id);
+
+    List<MatchDto> getAll();
+
+    List<MatchDto> getAllByTeamName(Club team);
 
 
 }

@@ -1,14 +1,13 @@
-package by.morunov.security.config;
+package by.morunov.security;
 
 import by.morunov.domain.entity.Role;
 import by.morunov.domain.entity.User;
 import by.morunov.properties.CorsProperties;
-import by.morunov.security.PasswordEncoder;
 import by.morunov.service.impl.UserServiceImpl;
 import by.morunov.util.CustomBasicAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
@@ -36,24 +36,35 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserServiceImpl userServiceImpl;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final CorsProperties corsProperties;
+    private final CustomBasicAuthenticationEntryPoint entryPoint;
 
-    @Autowired
-    private CorsProperties corsProperties;
+    public SecurityConfig(UserServiceImpl userServiceImpl,
+                          @Lazy BCryptPasswordEncoder passwordEncoder,
+                          CorsProperties corsProperties,
+                          CustomBasicAuthenticationEntryPoint entryPoint) {
+        this.userServiceImpl = userServiceImpl;
+        this.passwordEncoder = passwordEncoder;
+        this.corsProperties = corsProperties;
+        this.entryPoint = entryPoint;
+    }
 
-    @Autowired
-    private CustomBasicAuthenticationEntryPoint entryPoint;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(8);
+
+    }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("/api/v*/registration/**" , "/api/oauth", "/api/login")
+                .authorizeRequests().antMatchers("/api/v*/registration/**", "/api/oauth", "/api/login")
                 .permitAll().anyRequest()
                 .authenticated().and()
                 .formLogin()
@@ -72,10 +83,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder.bCryptPasswordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(userServiceImpl);
         return provider;
     }
@@ -98,8 +109,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             httpServletResponse.sendRedirect(corsProperties.getUiUrl());
         }
     }
-    }
-
-
-
-
+}

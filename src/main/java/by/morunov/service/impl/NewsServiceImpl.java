@@ -37,8 +37,10 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDto> getByAuthor(User user) {
-        return newsConverter.toDto(Lists.newArrayList(newsRepository.findAllByAuthor(user)));
+    public List<NewsDto> getByAuthorOrTitle(String authorFirstName, String title) {
+
+        return newsConverter.toDto(Lists.newArrayList(newsRepository.findByAuthor_FirstNameOrTitle(authorFirstName, title)));
+
     }
 
     @Override

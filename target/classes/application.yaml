@@ -4,7 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/MyClub
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: ${dbPassword}
+    password: ${DB_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     hibernate:
@@ -16,8 +16,8 @@ spring:
       client:
         registration:
           google:
-            clientId: ${idClient}
-            clientSecret: ${idSecret}
+            clientId: ${ID_CLIENT}
+            clientSecret: ${ID_SECRET}
             scope:
               - email
               - profile

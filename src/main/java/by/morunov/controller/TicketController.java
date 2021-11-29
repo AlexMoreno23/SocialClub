@@ -36,7 +36,7 @@ public class TicketController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<TicketDto> addTicket(Long matchId){
+    public ResponseEntity<TicketDto> addTicket(Long matchId) {
         TicketDto ticketDto = new TicketDto();
         ticketDto.setMatch(matchService.getMatch(matchId));
         LOGGER.info("Add ticket {}", ticketDto);
@@ -45,13 +45,13 @@ public class TicketController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TicketDto>> getAllTickets(){
+    public ResponseEntity<List<TicketDto>> getAllTickets() {
         List<TicketDto> allTickets = ticketService.getAll();
         return new ResponseEntity<>(allTickets, HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<Ticket> buyTicket(@RequestBody TicketDto ticket, Principal principal){
+    @PutMapping("/buy")
+    public ResponseEntity<Ticket> buyTicket(@RequestBody TicketDto ticket, Principal principal) {
         UserDto userDto = userService.getUserByEmail(principal.getName());
         List<TicketDto> tickets = userDto.getTickets();
         tickets.add(ticket);
@@ -60,8 +60,6 @@ public class TicketController {
         LOGGER.info("User {} buy ticket {}", userDto, ticket);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 
 
 }

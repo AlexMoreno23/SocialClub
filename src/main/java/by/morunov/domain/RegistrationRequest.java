@@ -1,4 +1,4 @@
-package by.morunov.domain.entity;
+package by.morunov.domain;
 
 import lombok.*;
 

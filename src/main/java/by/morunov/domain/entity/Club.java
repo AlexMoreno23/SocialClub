@@ -24,5 +24,4 @@ public class Club {
     private String nameTeam;
 
 
-
 }
